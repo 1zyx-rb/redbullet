@@ -1,0 +1,187 @@
+-- LocalScript (StarterPlayerScripts)
+
+-- Start timer
+local startTime = tick()
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SpeedGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 200) -- Larger size
+frame.Position = UDim2.new(0.5, -200, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true -- Make the frame draggable
+frame.Parent = screenGui
+
+-- Add UICorner to make the frame curved
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 20)
+uiCorner.Parent = frame
+
+-- Add UIStroke to create a rainbow border
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Parent = frame
+uiStroke.Thickness = 2
+uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+-- Function to cycle through colors to create a rainbow effect
+local function updateRainbowBorder()
+    while true do
+        for hue = 0, 1, 0.01 do
+            uiStroke.Color = Color3.fromHSV(hue, 1, 1)
+            wait(0.1)
+        end
+    end
+end
+
+-- Start the rainbow border update in a coroutine
+coroutine.wrap(updateRainbowBorder)()
+
+-- Create Title Label with rainbow colors
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
+titleLabel.Position = UDim2.new(0, -10, 0, 10) -- Adjusted position when expanded
+titleLabel.Text = "SpeedGUI by RedBullet"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextSize = 24 -- Larger text size for expanded mode
+titleLabel.BackgroundTransparency = 1
+titleLabel.Parent = frame
+
+-- Function to cycle through rainbow colors for text
+local function updateRainbowText()
+    while true do
+        for hue = 0, 1, 0.01 do
+            titleLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
+            wait(0.1)
+        end
+    end
+end
+
+-- Start the rainbow text update in a coroutine
+coroutine.wrap(updateRainbowText)()
+
+-- Create Expand/Collapse Button
+local expandButton = Instance.new("TextButton")
+expandButton.Size = UDim2.new(0, 24, 0, 24) -- Smaller size
+expandButton.Position = UDim2.new(1, -30, 0, 4) -- Adjusted position 1 pixel higher
+expandButton.Text = "+"
+expandButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+expandButton.BackgroundTransparency = 0.5 -- Semi-transparent background
+expandButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+expandButton.TextSize = 16 -- Smaller text size
+expandButton.Parent = frame
+
+-- Add UICorner to make the button rounded
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0.5, 0)
+buttonCorner.Parent = expandButton
+
+-- Create Speed Label
+local speedLabel = Instance.new("TextLabel")
+speedLabel.Size = UDim2.new(0.4, 0, 0.3, 0)
+speedLabel.Position = UDim2.new(0.05, 0, 0.4, 0)
+speedLabel.Text = "Speed:"
+speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+speedLabel.TextSize = 20 -- Larger text size for expanded mode
+speedLabel.BackgroundTransparency = 1
+speedLabel.Visible = true -- Default visible
+speedLabel.Parent = frame
+
+-- Create Speed TextBox
+local speedTextBox = Instance.new("TextBox")
+speedTextBox.Size = UDim2.new(0.5, 0, 0.3, 0)
+speedTextBox.Position = UDim2.new(0.5, 0, 0.4, 0)
+speedTextBox.Text = "16" -- Default speed value
+speedTextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+speedTextBox.TextSize = 20 -- Larger text size for expanded mode
+speedTextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+speedTextBox.TextXAlignment = Enum.TextXAlignment.Right -- Align text to the right
+speedTextBox.ClearTextOnFocus = false
+speedTextBox.Parent = frame
+
+-- Add UICorner to make the textbox curved
+local textBoxCorner = Instance.new("UICorner")
+textBoxCorner.CornerRadius = UDim.new(0, 15)
+textBoxCorner.Parent = speedTextBox
+
+-- Create Set Speed Button
+local setSpeedButton = Instance.new("TextButton")
+setSpeedButton.Size = UDim2.new(0.8, 0, 0.2, 0)
+setSpeedButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+setSpeedButton.Text = "Set Speed"
+setSpeedButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+setSpeedButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+setSpeedButton.TextSize = 20 -- Larger text size for expanded mode
+setSpeedButton.Parent = frame
+
+-- Add UICorner to make the button curved
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 15)
+buttonCorner.Parent = setSpeedButton
+
+-- Function to change player's run speed
+local function changeRunSpeed()
+    local newSpeed = tonumber(speedTextBox.Text)
+    if newSpeed then
+        local character = game.Players.LocalPlayer.Character
+        if character and character:FindFirstChildOfClass("Humanoid") then
+            character.Humanoid.WalkSpeed = newSpeed
+            print("Success! Your speed has been changed")
+        else
+            warn("Character or Humanoid not found.")
+        end
+    else
+        warn("Invalid speed input.")
+    end
+end
+
+-- Connect button click event to change run speed
+setSpeedButton.MouseButton1Click:Connect(changeRunSpeed)
+
+-- Ensure TextBox input does not exceed 8 characters
+speedTextBox:GetPropertyChangedSignal("Text"):Connect(function()
+    if #speedTextBox.Text > 8 then
+        speedTextBox.Text = string.sub(speedTextBox.Text, 1, 8)
+    end
+end)
+
+-- Toggle visibility based on GUI size
+local originalSize = frame.Size
+local collapsedSize = UDim2.new(0, 400, 0, 30) -- Collapsed size
+local expanded = true
+
+-- Function to handle expand/collapse
+local function toggleExpand()
+    if expanded then
+        frame:TweenSize(collapsedSize, "Out", "Quad", 0.5, true)
+        expandButton.Text = "+"
+        speedLabel.Visible = false
+        speedTextBox.Visible = false
+        setSpeedButton.Visible = false
+        titleLabel.TextSize = 12 -- Smaller text size for collapsed mode
+        titleLabel.Position = UDim2.new(0, -50, 0, 10) -- Adjusted more to the left and lower when collapsed
+    else
+        frame:TweenSize(originalSize, "Out", "Quad", 0.5, true)
+        expandButton.Text = "-"
+        speedLabel.Visible = true
+        speedTextBox.Visible = true
+        setSpeedButton.Visible = true
+        titleLabel.TextSize = 24 -- Larger text size for expanded mode
+        titleLabel.Position = UDim2.new(0, -10, 0, 10) -- Adjusted more to the right and lower when expanded
+    end
+    expanded = not expanded
+end
+
+-- Connect expand/collapse button
+expandButton.MouseButton1Click:Connect(toggleExpand)
+
+-- End timer and print load time
+local endTime = tick()
+local loadTime = endTime - startTime
+print("Script loaded in " .. loadTime .. " seconds")
+print("\27[32m Script loaded successfully!") -- Green text with space
