@@ -1,0 +1,177 @@
+
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TeleportGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 30) -- Start with collapsed size
+frame.Position = UDim2.new(0.5, -200, 0.5, -130) -- Adjusted position
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Active = true  -- Allow frame to capture input events
+frame.Draggable = true  -- Enable dragging
+frame.Parent = screenGui
+
+-- Add UICorner to make the frame curved
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 10)
+uiCorner.Parent = frame
+
+-- Add UIStroke to create a rainbow border
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Parent = frame
+uiStroke.Thickness = 2
+uiStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+-- Function to cycle through colors to create a rainbow effect
+local function updateRainbowBorder()
+    while true do
+        for hue = 0, 1, 0.01 do
+            uiStroke.Color = Color3.fromHSV(hue, 1, 1)
+            wait(0.1)
+        end
+    end
+end
+
+-- Start the rainbow border update in a coroutine
+coroutine.wrap(updateRainbowBorder)()
+
+-- Create Title Label with rainbow colors
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 1, 0)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.Text = "TP GUI by RedBullet"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextSize = 18
+titleLabel.BackgroundTransparency = 1
+titleLabel.Parent = frame
+
+-- Function to cycle through rainbow colors for text
+local function updateRainbowText()
+    while true do
+        for hue = 0, 1, 0.01 do
+            titleLabel.TextColor3 = Color3.fromHSV(hue, 1, 1)
+            wait(0.1)
+        end
+    end
+end
+
+-- Start the rainbow text update in a coroutine
+coroutine.wrap(updateRainbowText)()
+
+-- Create Minimize Button
+local minimizeButton = Instance.new("TextButton")
+minimizeButton.Size = UDim2.new(0, 30, 0, 30)
+minimizeButton.Position = UDim2.new(1, -40, 0, 0)
+minimizeButton.Text = "-"
+minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+minimizeButton.TextSize = 18
+minimizeButton.Parent = frame
+
+-- Add UICorner to make the minimize button rounded
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0.5, 0)
+buttonCorner.Parent = minimizeButton
+
+-- Create Frame to hold teleport GUI elements
+local teleportFrame = Instance.new("Frame")
+teleportFrame.Size = UDim2.new(0, 400, 0, 90)
+teleportFrame.Position = UDim2.new(0, 0, 1, 0)
+teleportFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+teleportFrame.BorderSizePixel = 0
+teleportFrame.Visible = false
+teleportFrame.Parent = frame
+
+-- Add UICorner to make the teleport frame curved
+local teleportCorner = Instance.new("UICorner")
+teleportCorner.CornerRadius = UDim.new(0, 10)
+teleportCorner.Parent = teleportFrame
+
+-- Create Player Name TextBox
+local playerNameTextBox = Instance.new("TextBox")
+playerNameTextBox.Size = UDim2.new(0.8, 0, 0, 30)
+playerNameTextBox.Position = UDim2.new(0.1, 0, 0, 10)
+playerNameTextBox.PlaceholderText = "Enter Player Name"
+playerNameTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+playerNameTextBox.TextSize = 14
+playerNameTextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+playerNameTextBox.Parent = teleportFrame
+
+-- Create Teleport Button
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(0.8, 0, 0, 30)
+teleportButton.Position = UDim2.new(0.1, 0, 0, 50)
+teleportButton.Text = "Teleport"
+teleportButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+teleportButton.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+teleportButton.TextSize = 16
+teleportButton.Parent = teleportFrame
+
+-- Function to teleport to a player
+local function teleportToPlayer()
+    local playerName = playerNameTextBox.Text
+    local player = game.Players:FindFirstChild(playerName)
+    if player then
+        local character = player.Character
+        if character then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                game.Players.LocalPlayer.Character:MoveTo(humanoidRootPart.Position)
+                print("Teleported to " .. playerName)
+            else
+                warn("Player's HumanoidRootPart not found.")
+            end
+        else
+            warn("Player's character not found.")
+        end
+    else
+        warn("Player not found.")
+    end
+end
+
+-- Connect button click event to teleport function
+teleportButton.MouseButton1Click:Connect(teleportToPlayer)
+
+-- Function to handle expand/collapse
+local function toggleExpand()
+    if teleportFrame.Visible then
+        -- Collapse
+        frame:TweenSize(UDim2.new(0, 400, 0, 30), "Out", "Quad", 0.5, true)
+        teleportFrame.Visible = false
+        minimizeButton.Text = "+"
+    else
+        -- Expand
+        frame:TweenSize(UDim2.new(0, 400, 0, 120), "Out", "Quad", 0.5, true)
+        teleportFrame.Visible = true
+        minimizeButton.Text = "-"
+    end
+end
+
+-- Connect minimize button click event
+minimizeButton.MouseButton1Click:Connect(toggleExpand)
+
+-- Function to handle drag movement
+local dragging
+local dragStartOffset
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStartOffset = input.Position - frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        frame.Position = UDim2.new(0, input.Position.X - dragStartOffset.X, 0, input.Position.Y - dragStartOffset.Y)
+    end
+end)
