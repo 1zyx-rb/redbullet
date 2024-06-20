@@ -1,0 +1,144 @@
+-- LocalScript (StarterGui or StarterPlayerScripts)
+
+-- Function to generate a random fake IP
+local function generateFakeIP()
+    local ip = ""
+    for i = 1, 4 do
+        ip = ip .. math.random(1, 255)
+        if i < 4 then
+            ip = ip .. "."
+        end
+    end
+    return ip
+end
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FakeIPGeneratorGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 200)  -- Frame size
+frame.Position = UDim2.new(0.5, -100, 0.5, -100)  -- Centered position
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Visible = true  -- Initially visible
+frame.Parent = screenGui
+
+-- Add UICorner to make the frame rounded
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 10)
+uiCorner.Parent = frame
+
+-- Create rainbow border
+local rainbowFrame = Instance.new("ImageLabel")
+rainbowFrame.Size = UDim2.new(1, 6, 1, 6)  -- Slightly larger to account for border
+rainbowFrame.Position = UDim2.new(0, -3, 0, -3)
+rainbowFrame.BackgroundTransparency = 1
+rainbowFrame.Image = "http://www.roblox.com/asset/?id=1972721443"  -- Rainbow image ID
+rainbowFrame.ImageColor3 = Color3.fromRGB(255, 0, 0)  -- Initial color
+rainbowFrame.Parent = frame
+
+-- Add UICorner to make the rainbow frame rounded
+local rainbowCorner = Instance.new("UICorner")
+rainbowCorner.CornerRadius = UDim.new(0, 10)
+rainbowCorner.Parent = rainbowFrame
+
+-- Create TextLabel for title
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 30)  -- Label height
+titleLabel.Position = UDim2.new(0, 0, 0, 0)  -- Align to top
+titleLabel.Text = "IP Grabber"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextSize = 18
+titleLabel.BackgroundTransparency = 1
+titleLabel.Parent = frame
+
+-- Create TextBox for entering username
+local usernameTextBox = Instance.new("TextBox")
+usernameTextBox.Size = UDim2.new(1, -20, 0, 30)  -- TextBox height
+usernameTextBox.Position = UDim2.new(0.5, -100, 0, 40)  -- Centered horizontally, 40 pixels down
+usernameTextBox.PlaceholderText = "Enter username..."
+usernameTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+usernameTextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+usernameTextBox.BorderSizePixel = 0
+usernameTextBox.TextSize = 14
+usernameTextBox.Parent = frame
+
+-- Add UICorner to make the username text box rounded
+local usernameCorner = Instance.new("UICorner")
+usernameCorner.CornerRadius = UDim.new(0, 5)
+usernameCorner.Parent = usernameTextBox
+
+-- Create Generate Button
+local generateButton = Instance.new("TextButton")
+generateButton.Size = UDim2.new(1, -20, 0, 30)  -- Button height
+generateButton.Position = UDim2.new(0.5, -100, 0, 90)  -- Centered horizontally, 90 pixels down
+generateButton.Text = "Grab IP"
+generateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+generateButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+generateButton.TextSize = 14
+generateButton.Parent = frame
+
+-- Add UICorner to make the generate button rounded
+local generateCorner = Instance.new("UICorner")
+generateCorner.CornerRadius = UDim.new(0, 5)
+generateCorner.Parent = generateButton
+
+-- Create TextLabel for displaying generated IP
+local ipLabel = Instance.new("TextLabel")
+ipLabel.Size = UDim2.new(1, -20, 0, 30)  -- Label height
+ipLabel.Position = UDim2.new(0, 10, 0, 140)  -- 10 pixels from the left, 140 pixels down
+ipLabel.Text = ""
+ipLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+ipLabel.TextSize = 14
+ipLabel.BackgroundTransparency = 1
+ipLabel.Parent = frame
+
+-- Function to handle generate button click
+generateButton.MouseButton1Click:Connect(function()
+    local username = usernameTextBox.Text
+    if username ~= "" then
+        -- Generate a fake IP based on the username
+        math.randomseed(os.time())
+        local fakeIP = generateFakeIP()
+        ipLabel.Text = string.format("IP for '%s': %s", username, fakeIP)
+    else
+        ipLabel.Text = "Please enter a username first."
+    end
+end)
+
+-- Function to make the frame draggable
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+-- Print a message to indicate the script executed
+print("Script executed!")
