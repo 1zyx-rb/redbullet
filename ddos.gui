@@ -1,0 +1,100 @@
+-- LocalScript (StarterGui or StarterPlayerScripts)
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FakeDDoSGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 100)  -- Frame size
+frame.Position = UDim2.new(0.5, -100, 0.5, -50)  -- Centered position
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Visible = true  -- Initially visible
+frame.Parent = screenGui
+
+-- Add UICorner to make the frame rounded
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 10)
+uiCorner.Parent = frame
+
+-- Create TextLabel
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, -30)  -- Adjusted size to leave room for button
+textLabel.Position = UDim2.new(0, 0, 0, 0)
+textLabel.Text = "DDoS Attack"
+textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)  -- Red color for DDoS attack
+textLabel.TextSize = 24
+textLabel.BackgroundTransparency = 1
+textLabel.Parent = frame
+
+-- Create Execute Button
+local executeButton = Instance.new("TextButton")
+executeButton.Size = UDim2.new(1, 0, 0, 30)  -- Button height
+executeButton.Position = UDim2.new(0, 0, 1, -30)  -- Align to bottom
+executeButton.Text = "Launch!"
+executeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+executeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+executeButton.TextSize = 18
+executeButton.Parent = frame
+
+-- Add UICorner to make the execute button rounded
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 10)
+buttonCorner.Parent = executeButton
+
+-- Function to make the frame draggable
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = frame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+-- Function to spam "Attack Launched" every 0.0001 seconds
+local function spamAttack()
+    while true do
+        print("Attack Launched on the servers!")
+        wait(0.0001)
+    end
+end
+
+-- Connect button click event to start spamming the GUI and change text temporarily
+executeButton.MouseButton1Click:Connect(function()
+    -- Change text to "Launched!" temporarily
+    textLabel.Text = "Launched!"
+
+    -- Restore original text after 5 seconds
+    wait(5)
+    textLabel.Text = "DDoS Attack"
+
+    -- Start the spamming coroutine
+    coroutine.wrap(spamAttack)()
+end)
+
+-- Print a message to indicate the script executed
+print("DDo SGui script executed!")
