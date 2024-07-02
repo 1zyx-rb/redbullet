@@ -1,0 +1,58 @@
+-- Function to create a rounded button
+local function createRoundedButton(parent, size, position, text, scriptUrl)
+    local Button = Instance.new("TextButton")
+    Button.Size = size
+    Button.Position = position
+    Button.Text = text
+    Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Button.Font = Enum.Font.SourceSans
+    Button.TextSize = 14.5  -- Increased text size
+    Button.Parent = parent
+    
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0.5, 0)
+    UICorner.Parent = Button
+    
+    -- Function to execute the script when button is clicked
+    Button.MouseButton1Click:Connect(function()
+        local success, scriptFunction = pcall(function()
+            return loadstring(game:HttpGet(scriptUrl)) -- Fetches and compiles the script
+        end)
+        
+        if success then
+            local executed, errorMsg = pcall(scriptFunction)
+            if executed then
+                local ExecutedLabel = Instance.new("TextLabel")
+                ExecutedLabel.Size = UDim2.new(0, 200, 0, 30)
+                ExecutedLabel.Position = UDim2.new(0.5, -100, 0.1, 0)
+                ExecutedLabel.Text = "Executed Successfully"
+                ExecutedLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                ExecutedLabel.BackgroundTransparency = 1
+                ExecutedLabel.Font = Enum.Font.SourceSansBold
+                ExecutedLabel.TextSize = 18
+                ExecutedLabel.Parent = parent
+                
+                -- Remove the label after 3 seconds
+                wait(3)
+                ExecutedLabel:Destroy()
+            else
+                warn("Execution error:", errorMsg)
+            end
+        else
+            warn("Failed to load script:", scriptFunction)
+        end
+    end)
+    
+    return Button
+end
+
+-- Create GUI
+local Gui = Instance.new("ScreenGui")
+Gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Left-middle button (FLOW-VXPE)
+local VapeButton = createRoundedButton(Gui, UDim2.new(0, 150, 0, 50), UDim2.new(0.25, -75, 0.75, -25), "FLOW-VXPE", "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua")
+
+-- Right-middle button (FLOW-COCO)
+local GodSploitButton = createRoundedButton(Gui, UDim2.new(0, 150, 0, 50), UDim2.new(0.75, -75, 0.75, -25), "FLOW-COCO", "https://scriptblox.com/raw/BedWars-INFECTED-Bed-Wars-Best-Script-GodSpolit-11802")
