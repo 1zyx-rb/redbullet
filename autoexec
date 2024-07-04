@@ -55,4 +55,4 @@ Gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local VapeButton = createRoundedButton(Gui, UDim2.new(0, 150, 0, 50), UDim2.new(0.25, -75, 0.75, -25), "FLOW-VXPE", "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua")
 
 -- Right-middle button (FLOW-COCO)
-local GodSploitButton = createRoundedButton(Gui, UDim2.new(0, 150, 0, 50), UDim2.new(0.75, -75, 0.75, -25), "FLOW-COCO", "https://scriptblox.com/raw/BedWars-INFECTED-Bed-Wars-Best-Script-GodSpolit-11802")
+local GodSploitButton = createRoundedButton(Gui, UDim2.new(0, 150, 0, 50), UDim2.new(0.75, -75, 0.75, -25), "FLOW-COCO", "https://raw.githubusercontent.com/cocotv666/CocoSploit/main/CocoSploit_Loader")
