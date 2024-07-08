@@ -1,0 +1,31 @@
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local BottomRightLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(128, 0, 128)
+Frame.BackgroundTransparency = 0.5
+Frame.Size = UDim2.new(1, 0, 1, 0)
+
+TextLabel.Parent = Frame
+TextLabel.Size = UDim2.new(1, 0, 1, 0)
+TextLabel.Font = Enum.Font.LuckiestGuy
+TextLabel.Text = "Nexis is working, Enjoy Scripting!"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextScaled = true
+
+BottomRightLabel.Parent = Frame
+BottomRightLabel.Size = UDim2.new(0, 200, 0, 50)
+BottomRightLabel.Position = UDim2.new(1, -200, 1, -50)
+BottomRightLabel.Font = Enum.Font.SourceSans
+BottomRightLabel.Text = "Made by .1zyx"
+BottomRightLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+BottomRightLabel.TextScaled = true
+
+wait(10)
+ScreenGui:Destroy()
+
+print("Nexis is working, Enjoy Scripting!")
