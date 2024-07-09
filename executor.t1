@@ -160,4 +160,4 @@ ExecuteButton.MouseButton1Click:Connect(function()
     end
 end)
 
-print("Nexis is working, Enjoy Scripting!")
+print("Nexis Version 1.0.0.3 (T1) is working, Enjoy Scripting!")
