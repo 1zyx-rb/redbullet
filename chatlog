@@ -1,0 +1,160 @@
+-- Initialize services
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
+-- Create or get the folder for storing chat logs
+local chatLogsFolder = "MacSploit_Workspace"
+if not isfolder(chatLogsFolder) then
+    makefolder(chatLogsFolder)
+end
+
+-- File path for the chat log
+local chatLogFile = chatLogsFolder .. "/chat_log.txt"
+
+-- Function to log messages to the file
+local function logMessage(playerName, message)
+    local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+    local logEntry = string.format("[%s] %s: %s\n", timestamp, playerName, message)
+    
+    -- Append the log entry to the file
+    appendfile(chatLogFile, logEntry)
+end
+
+-- Function to start logging chat messages
+local function startLogging()
+    -- Event listener for chat messages
+    local function onPlayerChatted(player, message)
+        logMessage(player.Name, message)
+    end
+
+    -- Connect the PlayerChatted event
+    for _, player in ipairs(Players:GetPlayers()) do
+        player.Chatted:Connect(function(message)
+            onPlayerChatted(player, message)
+        end)
+    end
+
+    -- Connect new players
+    Players.PlayerAdded:Connect(function(player)
+        player.Chatted:Connect(function(message)
+            onPlayerChatted(player, message)
+        end)
+    end)
+
+    print("Chat logging started.")
+end
+
+-- Create the main GUI
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UICornerFrame = Instance.new("UICorner")
+local TitleBar = Instance.new("Frame")
+local UICornerTitleBar = Instance.new("UICorner")
+local StatusLabel = Instance.new("TextLabel")
+local StartButton = Instance.new("TextButton")
+local UICornerStartButton = Instance.new("UICorner")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Frame setup
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)  -- Matte black background
+Frame.Size = UDim2.new(0, 300, 0, 150)
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)
+Frame.BorderSizePixel = 0
+
+-- UICorner for Frame
+UICornerFrame.CornerRadius = UDim.new(0, 12)
+UICornerFrame.Parent = Frame
+
+-- TitleBar setup
+TitleBar.Parent = Frame
+TitleBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)  -- Matte black background
+TitleBar.Size = UDim2.new(1, 0, 0, 40)
+TitleBar.BorderSizePixel = 0
+
+-- UICorner for TitleBar
+UICornerTitleBar.CornerRadius = UDim.new(0, 12)
+UICornerTitleBar.Parent = TitleBar
+
+-- StatusLabel setup
+StatusLabel.Parent = Frame
+StatusLabel.Size = UDim2.new(0.8, 0, 0.2, 0)
+StatusLabel.Position = UDim2.new(0.1, 0, 0.2, 0)
+StatusLabel.Font = Enum.Font.SourceSansBold
+StatusLabel.Text = ""
+StatusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+StatusLabel.TextSize = 18
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+-- StartButton setup
+StartButton.Parent = Frame
+StartButton.Size = UDim2.new(0.8, 0, 0.3, 0)
+StartButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+StartButton.Font = Enum.Font.SourceSansBold
+StartButton.Text = "Start Logging"
+StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+StartButton.TextSize = 18
+StartButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+StartButton.BorderSizePixel = 0
+
+-- UICorner for StartButton
+UICornerStartButton.CornerRadius = UDim.new(0, 12)
+UICornerStartButton.Parent = StartButton
+
+-- Draggable functionality
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = Frame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+-- Start button functionality
+StartButton.MouseButton1Click:Connect(function()
+    local success, errorMessage = pcall(function()
+        startLogging()
+    end)
+    if success then
+        StatusLabel.Text = "Executed Successfully"
+        StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+    else
+        StatusLabel.Text = "Execution Failed"
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+        warn("Error executing script: " .. errorMessage)
+    end
+    StartButton.Text = "Logging Started"
+    StartButton.Active = false
+    StartButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+end)
+
+print("Chat logging GUI initialized.")
