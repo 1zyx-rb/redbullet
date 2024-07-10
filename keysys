@@ -1,0 +1,177 @@
+-- List of valid keys
+local validKeys = {
+    "b8vZSPnenwM6c2cbRXb5ztXKvzaUY1EI",
+    "LPxiUsl3z4mMXkP94oBaBbF41JbgaSVi",
+    "NDlfUtC2asdCqLJcAyvyU4vgF6WTJKQa",
+    "mHO1NWnFPXhtJYJc1TsBSSTNX3GCjE3b",
+    "lc3q8FYgrsFh7XJY1wDNHkgqaqbAS6Tl",
+    "6cDwoJGTujfef9O9MPJGIGXca0yFKoVQ",
+    "TTxusdFXtRyKIbke1B6ABGA2ZseP2bJv",
+    "JkSWiMCDu0RVQpLC9J4rZf7UeVXzuKRs",
+    "7ZrU5xxGdZXTFEgZHrqqRS8dzTmmIOU6",
+    "SPbaOeo07Rr4r2nG73QheNwsLPKwgVgv",
+    "eUzryOH0NQC9PQO5gz18eX1WFRLhegjn",
+    "oFida3XMAFDYM5tYwyfErDC7ajJy7arn",
+    "Uhj6wm2FdJsQn9sfafX8BPdjRZSUhPzu",
+    "kGvvfHHjnLeygyyXVIl01JBdsAhZkELD",
+    "UjJSzeeA4JK472IBoZ7I4FGKeiLKQQ8Z",
+    "Egk2HBRkIHbP47p905meeIgnWzC5zO8S",
+    "6dec3cFROUSQuUVkw4q14FVAoGjPQ7x3",
+    "rrYGb8v49zfMKYIBrxAzAP0Z9eGlL2e2",
+    "dHZJoNmTd6LzFLzs8JvYnCYIg9cMIeue",
+    "bWTNLZmbV0ynzRBxMKGQsYsPuDDRyS9Q",
+    "0lQYWjr1OMyMvZqSEnW1KH1iiinCb4Ne",
+    "ZZXfHC84xeuvYz4A67VkMwWvS4BjOAzp",
+    "EPDzSG6Ihk8DUMfPIvWwpkonDN0s7f6a",
+    "jrtiaOyE7EeHu49fyGVBmDnTgW0ztptb",
+    "q8ijziE2xbhfwVuCmVH1mUOcEyUxsRz9",
+    "8q2y2jR30qWKNrS22cD5Ek2yK8XIH8w0",
+    "gKFBMo3NElgwMepMglaLQIy76WsIDEqj",
+    "YKsPdmaxBXlaB5wEeHLyMLoLaDRx8eIn",
+    "Cpn3we1shQJKi4mPaq8EFFhwelvEXUjF",
+    "0U2Wf4ZQMENlkro9Yv87BfbF1JTqCPmT",
+    "aM5M7chuIgsEChDeXl8SrfoCcux6XzAa",
+    "JxZAHkpCTnQ1DbMxTIZRkk55587fearn",
+    "K2pgZvB5MgKV9OMMXHSIih1yTfGSNLyy",
+    "EUE8jHSgU0kB1xMMouLivuUXnJwMMPAI",
+    "ssdP8e3Ig0XVQVa8U3OwnCu9gurRpHEl",
+    "WxIobIQ4IFHcM0TZMzgYjElhg0us4lyT",
+    "97zJ36P5rbqfYRiTID0BoHzHP8Bv1Bn8",
+    "QMvV1prAy0GUS6S4LMMEynWT2eZwus3M",
+    "IYZa4IOvJlE3nekq9prgdw1Y6HjdSW6d",
+    "14G5UHzNjLKWnI0G00Patd8YTrYvvgZV",
+    "q9rMHyl5sY5DpB09d4w6myZUcJwcQJk3",
+    "phEoqxs91lKh8msTzSCqRg04VeDcuYfO",
+    "ALUXlUl40Cvc92RCl5PO0GSkABt6bz03",
+    "q2Ars5BWOcVOA2nYXCRdWnysG6c1Rtj9",
+    "CDJ8aa8Yuafsa9krdYdjscWq9D50Sd6b",
+    "o7qwOfazsyJPzB204IPLaZObPyKP8DhT",
+    "hw9lLs1egqnfeRq1IXVc1RJsVdG28g3b",
+    "EyAJb7Utz8Balj2WA1dtYoV8thaOHKvW",
+    "nc32Rxj8BhQmhiCQAJ69CAMnS8ZCbKjj",
+    "VJkrbYlP6JVyyGCkgMDmAPXvvq5mCxbQ",
+    "de3nZAr65kMt00zGsbcC0epmu6vUKDZI",
+    "7OQVYF4DBZbJf77DZp7crh5R34ZzwXlk",
+    "Asaa78gGXjFYeqheAcYtrFxWlatqBpYT",
+    "JOedsa10g1ybdPqjXIqIZCOV2Yqw2LK4",
+    "AMveupX5ugx3TpV8rWMNVM6EGFUcEZXY",
+    "SvBZSQfMZT4CHR8Og0o1oRK63SNY3STK",
+    "MQA2xzcnssBRWRnEUTU7a8a359Oa5aIs",
+    "ObSTKS0CCSAPxchc3eoGXZcRnz4pIN9E",
+    "6U77NsK6gSsmN0ZnE7DKH9NwspQKAZjE",
+    "XRD3x8HawIQ7h0RmK7ImGuizZR9MZ4wc",
+    "VeaSBAx7fOoeUcUMtYgpoll3UewmxRnZ",
+    "sem0RqRYmoJjhJHGR8dhgfAViIAhcG3S",
+    "EG8kbTDG91mBc9mMZJd5VVb8UCufFGEW",
+    "lqF3p6muBtKFt6lclC8DCb15t7g6rd3E",
+    "gl4rSdBfPNGjNzZ1EDTUuZbQyTrrp6BY",
+    "SAr5J7WHdd9KvyQFnKKMtelnk8Zl0izW",
+    "IImwd2N04hTuMxaiBX1wTWIwT1XyYjk2",
+    "UsQ1he3fjkqIJ1JY8XljzRvuEyxqutKo",
+    "J6Xm31pTR4wxI12FcaaJCe5ptWvMoE7H",
+    "0L0wLO658VcRWJkaEDI0BGL7yzWmE2cb"
+}
+
+-- Create the GUI components
+local KeyGUI = Instance.new("ScreenGui")
+local KeyFrame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local TextButton = Instance.new("TextButton")
+
+-- Set properties for KeyGUI
+KeyGUI.Name = "KeyGUI"
+KeyGUI.Parent = game.CoreGui
+
+KeyFrame.Name = "KeyFrame"
+KeyFrame.Parent = KeyGUI
+KeyFrame.Size = UDim2.new(0, 300, 0, 150)
+KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+KeyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+KeyFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+KeyFrame.BorderSizePixel = 2
+KeyFrame.ClipsDescendants = true
+KeyFrame.Active = true
+KeyFrame.Draggable = true
+KeyFrame.Style = Enum.FrameStyle.RobloxRound
+
+TextBox.Name = "Enter your Key"
+TextBox.Parent = KeyFrame
+TextBox.Size = UDim2.new(0, 280, 0, 50)
+TextBox.Position = UDim2.new(0.5, -140, 0.3, -25)
+TextBox.PlaceholderText = "Enter your key"
+TextBox.Font = Enum.Font.SourceSans
+TextBox.TextSize = 24
+TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.BorderSizePixel = 0
+TextBox.ClearTextOnFocus = false
+
+TextButton.Name = "TextButton"
+TextButton.Parent = KeyFrame
+TextButton.Size = UDim2.new(0, 100, 0, 50)
+TextButton.Position = UDim2.new(0.5, -50, 0.7, -25)
+TextButton.Text = "Submit"
+TextButton.Font = Enum.Font.SourceSans
+TextButton.TextSize = 24
+TextButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+TextButton.BorderSizePixel = 0
+
+-- Function to check if a key is valid
+local function isValidKey(inputKey)
+    for _, key in ipairs(validKeys) do
+        if inputKey == key then
+            return true
+        end
+    end
+    return false
+end
+
+-- Connect the TextButton click event to check the key
+TextButton.MouseButton1Click:Connect(function()
+    local inputKey = TextBox.Text
+    if isValidKey(inputKey) then
+        print("Key is valid. Executing Nexis...")
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/1zyx-rb/redbullet/main/executor.t1"))()
+        KeyGUI:Destroy()  -- Destroy KeyGUI once execution is successful
+    else
+        print("Invalid key. Please try again.")
+    end
+end)
+
+-- Make the GUI draggable
+local UIS = game:GetService("UserInputService")
+local dragToggle = nil
+local dragInput = nil
+local dragStart = nil
+local startPos = nil
+
+local function updateInput(input)
+    local delta = input.Position - dragStart
+    KeyFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+KeyFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragToggle = true
+        dragStart = input.Position
+        startPos = KeyFrame.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragToggle = false
+            end
+        end)
+    end
+end)
+
+KeyFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if input == dragInput and dragToggle then
+        updateInput(input)
+    end
+end)
